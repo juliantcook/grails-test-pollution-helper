@@ -2,15 +2,25 @@ def testType = args[0]
 def lastTestName = args[1]
 
 def testRunner = new TestRunner(testType: testType)
-println testRunner.findPollutingTest(lastTestName)
+//println testRunner.findPollutingTest(lastTestName)
+println testRunner.runTestLast(lastTestName)
 
 class TestRunner {
 	String testType
 
 	String findPollutingTest(String test) {
-		def testNames = getTestNames()
-		testNames -= test
+		def testNames = getTestNamesExcluding(test)
 		findPollutingTest(testNames, test)
+	}
+
+	String runTestLast(String test) {
+		def testNames = getTestNamesExcluding(test)
+		getOutPutFromRunningTests(testNames + [ test ])
+	}
+
+	List<String> getTestNamesExcluding(String testToExclude) {
+		def testNames = getTestNames()
+		testNames - testToExclude
 	}
 
 	def getTestNames() {
